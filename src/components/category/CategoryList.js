@@ -44,7 +44,7 @@ const CategoryList = () => {
                 <div>
                     <Link href='/' className='btn btn-sm btn-primary me-2 px-5 rounded-pill'>All</Link>
                     {categories.map((category) => (
-                        <Link to={category.name} className='btn btn-sm btn-outline-primary me-2 rounded-pill' key={category.id}><div className='d-flex align-items-center'>
+                        <Link to={`/categories/${category.id}`} className='btn btn-sm btn-outline-primary me-2 rounded-pill' key={category.id}><div className='d-flex align-items-center'>
                             {category.imageUrl ? (
                                 <img src={category.imageUrl} alt={category.name} width={30} />
                             ) : (

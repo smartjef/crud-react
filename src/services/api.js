@@ -43,3 +43,12 @@ export const getProductById = async (productId) => {
         throw error;
     }
 };
+
+export const getCategoryById = async (categoryId) => {
+    try {
+        const response = await axios.get(`${API_BASE_URL}/categories/${categoryId}`);
+        return response.data;
+    } catch (error) {
+        throw error;
+    }
+};
