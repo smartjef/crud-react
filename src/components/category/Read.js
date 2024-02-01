@@ -10,7 +10,8 @@ const CategoryList = () => {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const [showAddCategoryModal, setShowAddCategoryModal] = useState(false);
-
+    const [refresh, setRefresh] =useState(false)
+    const toggleREfresh = ()=>setRefresh(!refresh)
     const handleCloseAddCategoryModal = () => setShowAddCategoryModal(false);
 
     useEffect(() => {
@@ -26,7 +27,7 @@ const CategoryList = () => {
         };
 
         fetchCategories();
-    }, []);
+    }, [refresh]);
 
     if (loading) {
         return <LoadingSpinner />;
@@ -54,7 +55,8 @@ const CategoryList = () => {
                         </Link>
                     ))}
                 </div>
-                <AddCategory show={showAddCategoryModal} handleClose={handleCloseAddCategoryModal} />
+                <AddCategory show={showAddCategoryModal} handleClose={handleCloseAddCategoryModal} onSubmitted={toggleREfresh}/>
+                <button onClick={()=>setShowAddCategoryModal(true)} className='btn btn-primary rounded-pill me-2'>Add Category</button>
             </div>
         </div>
     );

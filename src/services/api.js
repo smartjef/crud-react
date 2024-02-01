@@ -34,7 +34,7 @@ export const updateCategory = async (categoryId, updatedCategoryData) => {
 export const deleteCategory = async (categoryId) => {
     try {
         const response = await axios.delete(`${API_BASE_URL}/categories/${categoryId}`);
-        console.log('Category deleted successfully:', response.data);
+        console.log('Category deleted successfully:', response);
     } catch (error) {
         console.error('Error deleting category:', error);
     }

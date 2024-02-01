@@ -5,18 +5,33 @@ import { addNewProduct, getAllCategories, updateProduct } from '../../services/a
 import "@blueprintjs/core/lib/css/blueprint.css";
 import "@blueprintjs/select/lib/css/blueprint-select.css";
 
-const ProductForm = ({ showModal, handleClose, productData: initialProductData, isEditMode }) => {
+const ProductForm = ({ showModal, handleClose, initialProductData, onSubmitted }) => {
     const [productData, setProductData] = useState({
-        name: '',
-        category: '',
-        price: '',
-        description: '',
-        imageUrl: '',
+        name: initialProductData?.name??'',
+        category: initialProductData?.category??'',
+        price: initialProductData?.price??'',
+        description: initialProductData?.description??'',
+        imageUrl: initialProductData?.imageUrl??'',
     });
 
     const [categories, setCategories] = useState([]);
 
+    useEffect(()=>{
+        if(initialProductData){
+            setProductData({
+                name: initialProductData?.name??'',
+                category: initialProductData?.category??'',
+                price: initialProductData?.price??'',
+                description: initialProductData?.description??'',
+                imageUrl: initialProductData?.imageUrl??'',
+            })
+        }
+
+    }
+    , [initialProductData])
+
     useEffect(() => {
+
         const fetchCategories = async () => {
             try {
                 const response = await getAllCategories();
@@ -28,10 +43,10 @@ const ProductForm = ({ showModal, handleClose, productData: initialProductData, 
 
         fetchCategories();
 
-        if (isEditMode && initialProductData) {
+        if (initialProductData) {
             setProductData(initialProductData);
         }
-    }, [isEditMode, initialProductData]);
+    }, [initialProductData]);
 
     const [selectedProduct, setSelectedProduct] = useState(null);
 
@@ -65,8 +80,8 @@ const ProductForm = ({ showModal, handleClose, productData: initialProductData, 
         e.preventDefault();
 
         try {
-            if (isEditMode) {
-                await updateProduct(productData.id, productData);
+            if (initialProductData) {
+                await updateProduct(initialProductData.id, productData);
             } else {
                 await addNewProduct(productData);
             }
@@ -74,13 +89,15 @@ const ProductForm = ({ showModal, handleClose, productData: initialProductData, 
             handleClose();
         } catch (error) {
             console.error('Error creating/updating product:', error);
+        } finally {
+            if(typeof onSubmitted === "function") onSubmitted()
         }
     };
 
     return (
         <Modal show={showModal} onHide={handleClose}>
             <Modal.Header closeButton>
-                <Modal.Title>{isEditMode ? 'Edit Product' : 'Add New Product'}</Modal.Title>
+                <Modal.Title>{initialProductData ? 'Edit Product' : 'Add New Product'}</Modal.Title>
             </Modal.Header>
             <Modal.Body>
                 <form onSubmit={handleSubmit}>
@@ -143,7 +160,7 @@ const ProductForm = ({ showModal, handleClose, productData: initialProductData, 
                             onChange={handleChange}
                         />
                     </Form.Group>
-                    <Button type="submit" className='mt-3'>{isEditMode ? 'Update Product' : 'Add Product'}</Button>
+                    <Button type="submit" className='mt-3'>{initialProductData ? 'Update Product' : 'Add Product'}</Button>
                 </form>
             </Modal.Body>
         </Modal>

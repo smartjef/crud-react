@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { deleteCategory } from '../../services/api';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams, useNavigate, Link } from 'react-router-dom';
 
 const CategoryDelete = () => {
     const { categoryId } = useParams();
@@ -16,6 +16,7 @@ const CategoryDelete = () => {
         } catch (error) {
             console.error('Error deleting category:', error);
         }
+        
     };
 
     return (
@@ -31,6 +32,7 @@ const CategoryDelete = () => {
                 <div>
                     <p>Click the button below to initiate the deletion.</p>
                     <button className='btn btn-warning me-2' onClick={() => setConfirmation(true)}>Initiate Deletion</button>
+                    <Link to={`/`} className='btn btn-primary me-2'>Back to home</Link>
                 </div>
             )}
         </div>

@@ -11,7 +11,8 @@ const ProductList = () => {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const [selectedProduct, setSelectedProduct] = useState(null);
-
+    const [refresh, setRefresh] =useState(false)
+    const toggleREfresh = ()=>setRefresh(!refresh)
 
     const [showModal, setShowModal] = useState(false);
 
@@ -47,7 +48,7 @@ const ProductList = () => {
         };
 
         fetchProducts();
-    }, []);
+    }, [refresh]);
 
     if (loading) {
         return <LoadingSpinner />;
@@ -62,14 +63,14 @@ const ProductList = () => {
             <h1 className='h3'>Products</h1>
             <div className='row'>
                 {products.map((product) => (
-                    <div className='col-sm-12 col-md-6 col-lg-4 p-2'>
+                    <div className='col-sm-12 col-md-6 col-lg-4 p-2' key={product.id}>
                         <div className='card card-body border-0'>
                             {product.imageUrl ? (
                                 <img src={product.imageUrl} alt={product.name} className='card-img-top' />
                             ) : (
                                 <img src='https://ke.jumia.is/unsafe/fit-in/500x500/filters:fill(white)/product/16/0933721/1.jpg' alt='Default' className='card-img-top' />
                             )}
-                            <h5 className='card-title' key={product.id}>{product.name}</h5>
+                            <h5 className='card-title' >{product.name}</h5>
                             <b>Ksh. {product.price}</b>
                             <p>{product.description}</p>
                             <div>
@@ -87,7 +88,7 @@ const ProductList = () => {
                             <p>Product</p>
                         </div>
                     </Button>
-                    <ProductForm showModal={showModal} handleClose={handleClose} selectedProduct={selectedProduct}/>
+                    <ProductForm showModal={showModal} handleClose={handleClose}  initialProductData={selectedProduct} onSubmitted={toggleREfresh}/>
                 </div>
             </div>
         </div>

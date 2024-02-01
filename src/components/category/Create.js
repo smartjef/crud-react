@@ -1,14 +1,23 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
 import Form from 'react-bootstrap/Form';
-import { addNewCategory } from '../../services/api';
+import { addNewCategory, updateCategory } from '../../services/api';
 
-function AddCategoryModal({ show, handleClose }) {
+function AddCategoryModal({ show, handleClose, category, onSubmitted }) {
     const [categoryData, setCategoryData] = useState({
         name: '',
         imageUrl: '',
     });
+
+    useEffect(() => {
+        if (category) {
+            setCategoryData({
+                name: category.name ?? '',
+                imageUrl: category.imageUrl ?? '',
+            })
+        }
+    }, [category])
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -19,12 +28,17 @@ function AddCategoryModal({ show, handleClose }) {
         e.preventDefault();
 
         try {
-            const response = await addNewCategory(categoryData);
-            console.log('New category created:', response.data);
+            if(category){
+
+                await updateCategory(category.id, categoryData)
+            }else {
+                await addNewCategory(categoryData);
+            }
             handleClose();
-            window.location.reload(); 
         } catch (error) {
             console.error('Error creating category:', error);
+        } finally {
+            if(typeof onSubmitted === "function") onSubmitted()
         }
     };
 
@@ -32,7 +46,7 @@ function AddCategoryModal({ show, handleClose }) {
         <>
             <Modal show={show} onHide={handleClose}>
                 <Modal.Header closeButton>
-                    <Modal.Title>Add New Category</Modal.Title>
+                    <Modal.Title>{category ? 'Edit Category' : 'Add New Category'}</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
                     <Form onSubmit={handleSubmit}>
@@ -58,7 +72,7 @@ function AddCategoryModal({ show, handleClose }) {
                             />
                         </Form.Group>
                         <Button variant="primary" className='mt-3' type="submit">
-                            Create Category
+                            {category ? 'Edit Category' : 'Add New Category'}
                         </Button>
                     </Form>
                 </Modal.Body>
@@ -67,20 +81,5 @@ function AddCategoryModal({ show, handleClose }) {
     );
 }
 
-function Example() {
-    const [showAddCategoryModal, setShowAddCategoryModal] = useState(false);
 
-    const handleShowAddCategoryModal = () => setShowAddCategoryModal(true);
-    const handleCloseAddCategoryModal = () => setShowAddCategoryModal(false);
-
-    return (
-        <>
-            <Button variant="primary" className='rounded-pill' onClick={handleShowAddCategoryModal}>
-                Add Category
-            </Button>
-            <AddCategoryModal show={showAddCategoryModal} handleClose={handleCloseAddCategoryModal} />
-        </>
-    );
-}
-
-export default Example;
+export default AddCategoryModal;
