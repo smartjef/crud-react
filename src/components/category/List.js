@@ -3,7 +3,7 @@ import { getAllCategories } from '../../services/api';
 import LoadingSpinner from '../common/LoadingSpinner';
 import ErrorMessage from '../common/ErrorMessage';
 import { Link } from 'react-router-dom';
-import AddCategory from './Create';
+import AddCategory from './CreateForm';
 
 const CategoryList = () => {
     const [categories, setCategories] = useState([]);
